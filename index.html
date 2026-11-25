@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trần Văn Phây · Full-Stack Mobile Developer</title>
+<meta name="description" content="Trần Văn Phây – Full-Stack Mobile Developer with 7+ years of experience in Flutter, Android and ASP.NET Core / Go backends. Builder of Elix Yard.">
+<link rel="canonical" href="https://tranvanphay.github.io/">
+<meta property="og:title" content="Trần Văn Phây · Full-Stack Mobile Developer">
+<meta property="og:description" content="7+ years building Flutter & Android apps and their backends. Enterprise SFA apps for FMCG at DMSpro, founder of Elix Yard.">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="https://tranvanphay.github.io/">
+<meta property="og:image" content="https://tranvanphay.github.io/assets/photo.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c8743f'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='28' fill='white' text-anchor='middle'%3ETP%3C/text%3E%3C/svg%3E">
+<script>
+  // Chọn ngôn ngữ trước khi vẽ trang để không bị nháy: ?lang= → lựa chọn đã lưu → ngôn ngữ trình duyệt.
+  (function () {
+    var lang = null;
+    try { lang = new URLSearchParams(location.search).get("lang"); } catch (e) {}
+    if (lang !== "vi" && lang !== "en") {
+      try { lang = localStorage.getItem("lang"); } catch (e) {}
+    }
+    if (lang !== "vi" && lang !== "en") {
+      lang = /^vi\b/i.test(navigator.language || "") ? "vi" : "en";
+    }
+    document.documentElement.setAttribute("data-lang", lang);
+    document.documentElement.lang = lang;
+    try { var t = localStorage.getItem("theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f5f2;
+    --card: #ffffff;
+    --ink: #1f2328;
+    --muted: #5b6470;
+    --line: #e7e3de;
+    --accent: #c8743f;
+    --accent-strong: #b35f2a;
+    --accent-soft: #fbefe6;
+    --shadow: 0 1px 2px rgba(31,35,40,.04), 0 6px 24px rgba(31,35,40,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14161a; --bg-soft: #1a1d22; --card: #1d2026; --ink: #e9eaec; --muted: #a2a9b3;
+      --line: #2c3038; --accent: #e3925c; --accent-strong: #eea46f; --accent-soft: #3a2a20;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14161a; --bg-soft: #1a1d22; --card: #1d2026; --ink: #e9eaec; --muted: #a2a9b3;
+    --line: #2c3038; --accent: #e3925c; --accent-strong: #eea46f; --accent-soft: #3a2a20;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.35);
+  }
+
+  /* language switch: mỗi đoạn có bản .en và .vi, chỉ hiện bản đúng ngôn ngữ */
+  html:not([data-lang="vi"]) .vi { display: none !important; }
+  html[data-lang="vi"] .en { display: none !important; }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  html, body { overflow-x: hidden; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Be Vietnam Pro", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent-strong); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+  /* nav */
+  nav.top {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: saturate(150%) blur(10px); -webkit-backdrop-filter: saturate(150%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.top .wrap { display: flex; align-items: center; gap: 10px; height: 60px; }
+  .brand { font-weight: 800; color: var(--ink); letter-spacing: -.2px; margin-right: auto; }
+  .brand span { color: var(--accent); }
+  .links { display: flex; gap: 4px; margin-right: 6px; }
+  .links a { color: var(--muted); font-size: 14px; font-weight: 500; padding: 6px 10px; border-radius: 8px; }
+  .links a:hover, .links a.active { color: var(--ink); background: var(--bg-soft); text-decoration: none; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); display: grid; place-items: center; cursor: pointer;
+  }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .lang-switch { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; height: 36px; background: var(--card); }
+  .lang-switch button {
+    border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 700;
+    padding: 0 11px; cursor: pointer; letter-spacing: .3px;
+  }
+  .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+  /* hero */
+  .hero { padding: 64px 0 48px; }
+  .hero .wrap { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600;
+    color: var(--accent-strong); background: var(--accent-soft); padding: 4px 12px; border-radius: 999px;
+  }
+  .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: #2ea043; display: inline-block; }
+  h1 { font-size: clamp(34px, 5.6vw, 54px); line-height: 1.1; margin: 16px 0 8px; letter-spacing: -1px; font-weight: 800; }
+  .role { font-size: clamp(18px, 2.4vw, 22px); color: var(--accent-strong); font-weight: 600; margin: 0 0 16px; }
+  .lead { color: var(--muted); font-size: 17px; max-width: 620px; margin: 0 0 24px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 12px;
+    font-weight: 600; font-size: 15px; border: 1px solid var(--line); color: var(--ink); background: var(--card);
+  }
+  .btn:hover { text-decoration: none; border-color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: var(--accent-strong); }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .avatar {
+    width: 220px; height: 220px; border-radius: 50%; object-fit: cover;
+    border: 6px solid var(--card); box-shadow: 0 0 0 2px var(--accent), var(--shadow);
+  }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 40px; }
+  .stat { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .stat b { display: block; font-size: 26px; line-height: 1.2; font-weight: 800; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  /* sections */
+  section { padding: 48px 0; }
+  section.soft { background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  h2 { font-size: 28px; margin: 0 0 6px; letter-spacing: -.4px; font-weight: 800; }
+  .sub { color: var(--muted); margin: 0 0 28px; }
+
+  .chips-group { display: grid; grid-template-columns: 170px 1fr; gap: 14px 20px; align-items: start; }
+  .chips-group h3 { font-size: 15px; margin: 6px 0 0; font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-size: 13.5px; padding: 5px 12px; border-radius: 999px; background: var(--card);
+    border: 1px solid var(--line); color: var(--ink); max-width: 100%;
+  }
+  .chip.hot { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); background: var(--accent-soft); color: var(--accent-strong); font-weight: 600; }
+
+  /* timeline */
+  .timeline { position: relative; margin-left: 8px; }
+  .timeline::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+  .job { position: relative; padding: 0 0 32px 32px; }
+  .job:last-child { padding-bottom: 0; }
+  .job::before {
+    content: ""; position: absolute; left: -6px; top: 8px; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--bg); border: 3px solid var(--accent);
+  }
+  .job.current::before { background: var(--accent); }
+  .job-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; align-items: baseline; }
+  .job h3 { margin: 0; font-size: 19px; font-weight: 700; }
+  .job h3 small { font-weight: 500; color: var(--muted); font-size: 16px; }
+  .date { font-size: 14px; color: var(--muted); font-weight: 500; }
+  .pos { color: var(--accent-strong); font-weight: 600; margin: 2px 0 10px; }
+  .block-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin: 14px 0 6px; display: flex; align-items: center; gap: 8px; }
+  .badge { font-size: 11px; font-weight: 700; color: #fff; background: var(--accent); padding: 1px 8px; border-radius: 999px; letter-spacing: .5px; }
+  .job ul { margin: 0; padding-left: 20px; }
+  .job li { margin: 4px 0; }
+  .job li::marker { color: var(--accent); }
+  .stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .stack .chip { font-size: 12.5px; padding: 3px 10px; }
+
+  /* project cards */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px;
+    box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px;
+  }
+  .card .tag { align-self: flex-start; font-size: 12px; font-weight: 700; color: var(--accent-strong); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; }
+  .card h3 { margin: 0; font-size: 20px; font-weight: 700; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 14.5px; color: var(--muted); }
+  .card .stack { margin-top: auto; padding-top: 6px; }
+  .card .more { font-weight: 600; font-size: 14.5px; }
+
+  .other { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; margin-top: 28px; }
+  .mini { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; background: var(--card); }
+  .mini b { display: block; font-size: 15px; }
+  .mini p { margin: 2px 0 6px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .mini small { color: var(--accent-strong); font-size: 12.5px; font-weight: 600; }
+  .mini a { font-size: 12.5px; font-weight: 600; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .info-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  .info-card h3 { margin: 0 0 6px; font-size: 18px; }
+  .info-card p { margin: 0; color: var(--muted); }
+  .info-card p b { color: var(--ink); }
+
+  /* contact */
+  .contact { text-align: center; padding: 64px 0; }
+  .contact .cta { justify-content: center; margin-top: 20px; }
+  footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; padding: 20px 0 28px; text-align: center; }
+
+  /* responsive */
+  @media (max-width: 880px) {
+    .links { display: none; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 680px) {
+    .hero { padding: 36px 0 32px; }
+    .hero .wrap { grid-template-columns: 1fr; gap: 24px; }
+    .hero .photo { order: -1; }
+    .avatar { width: 132px; height: 132px; border-width: 4px; }
+    .chips-group { grid-template-columns: 1fr; gap: 6px; }
+    .chips-group h3 { margin-top: 12px; }
+    .two { grid-template-columns: 1fr; }
+    .wrap { padding: 0 16px; }
+    .btn { flex: 1 1 auto; justify-content: center; }
+  }
+
+  @media print {
+    nav.top, .cta { display: none !important; }
+    section, .hero { padding: 16px 0; }
+    section.soft { background: none; border: 0; }
+    .card, .info-card, .mini, .stat { box-shadow: none; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top">Trần Văn Phây<span>.</span></a>
+    <div class="links">
+      <a href="#skills"><span class="en">Skills</span><span class="vi">Kỹ năng</span></a>
+      <a href="#experience"><span class="en">Experience</span><span class="vi">Kinh nghiệm</span></a>
+      <a href="#projects"><span class="en">Projects</span><span class="vi">Dự án</span></a>
+      <a href="#education"><span class="en">Education</span><span class="vi">Học vấn</span></a>
+      <a href="#contact"><span class="en">Contact</span><span class="vi">Liên hệ</span></a>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Language / Ngôn ngữ">
+      <button type="button" data-set-lang="vi" aria-pressed="false" title="Tiếng Việt">VI</button>
+      <button type="button" data-set-lang="en" aria-pressed="true" title="English">EN</button>
+    </div>
+    <button class="icon-btn theme" type="button" aria-label="Light / dark" title="Light / dark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow"><i></i><span class="en">Open to new opportunities</span><span class="vi">Sẵn sàng cho cơ hội mới</span></span>
+      <h1>Trần Văn Phây</h1>
+      <p class="role">Full-Stack Mobile Developer</p>
+      <p class="lead en">I build Flutter and Android apps together with the backends behind them. 7+ years shipping products —
+        from enterprise Sales Force Automation apps for FMCG companies to my own SaaS, <b>Elix Yard</b>.</p>
+      <p class="lead vi">Tôi xây dựng ứng dụng Flutter, Android cùng phần backend phía sau. Hơn 7 năm làm sản phẩm — từ ứng dụng
+        quản lý lực lượng bán hàng (SFA) cho các doanh nghiệp FMCG đến SaaS của riêng tôi, <b>Elix Yard</b>.</p>
+      <div class="cta">
+        <a class="btn primary" href="assets/CV-2026-EN.pdf" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          <span class="en">Download CV</span><span class="vi">Tải CV (tiếng Anh)</span>
+        </a>
+        <a class="btn" href="mailto:phay.tran99@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          <span class="en">Email me</span><span class="vi">Gửi email</span>
+        </a>
+        <a class="btn" href="https://github.com/tranvanphay" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+    <div class="photo"><img class="avatar" src="assets/photo.jpg" alt="Trần Văn Phây" width="220" height="220"></div>
+  </div>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>7+</b><span class="en">years in software</span><span class="vi">năm làm phần mềm</span></div>
+      <div class="stat"><b>15+</b><span class="en">projects shipped</span><span class="vi">dự án đã tham gia</span></div>
+      <div class="stat"><b>3</b><span class="en">companies</span><span class="vi">công ty</span></div>
+      <div class="stat"><b>1</b><span class="en">SaaS live in production</span><span class="vi">SaaS đang chạy thực tế</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="soft" id="skills">
+  <div class="wrap">
+    <h2><span class="en">Skills</span><span class="vi">Kỹ năng</span></h2>
+    <p class="sub"><span class="en">What I use day to day — highlighted items are my main stack.</span><span class="vi">Công nghệ tôi dùng hằng ngày — mục tô màu là thế mạnh chính.</span></p>
+    <div class="chips-group">
+      <h3>Mobile</h3>
+      <div class="chips">
+        <span class="chip hot">Flutter / Dart</span><span class="chip hot">Android (Java, Kotlin)</span>
+        <span class="chip"><span class="en">iOS basics (Swift)</span><span class="vi">iOS cơ bản (Swift)</span></span>
+        <span class="chip">GetX</span><span class="chip">BLoC</span><span class="chip">MVVM / MVP</span>
+        <span class="chip"><span class="en">Offline-first SQLite sync</span><span class="vi">Đồng bộ SQLite offline-first</span></span>
+        <span class="chip">FCM</span><span class="chip">BLE</span><span class="chip">Shorebird code push</span>
+        <span class="chip"><span class="en">Google Play &amp; App Store release</span><span class="vi">Phát hành Google Play &amp; App Store</span></span>
+      </div>
+      <h3>Backend</h3>
+      <div class="chips">
+        <span class="chip hot">C# / ASP.NET Core</span><span class="chip">Microservices</span><span class="chip">gRPC</span><span class="chip">Azure Service Bus</span>
+        <span class="chip">Azure Functions</span><span class="chip">Hangfire</span><span class="chip hot">Go</span><span class="chip">Java Spring Boot</span><span class="chip">RabbitMQ</span>
+      </div>
+      <h3>Web</h3>
+      <div class="chips"><span class="chip hot">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span></div>
+      <h3><span class="en">Databases</span><span class="vi">Cơ sở dữ liệu</span></h3>
+      <div class="chips">
+        <span class="chip hot">SQL Server</span><span class="chip hot">PostgreSQL</span><span class="chip">MariaDB / MySQL</span><span class="chip">SQLite / Room</span>
+        <span class="chip">MongoDB</span><span class="chip">Firebase</span>
+      </div>
+      <h3><span class="en">DevOps &amp; tools</span><span class="vi">DevOps &amp; công cụ</span></h3>
+      <div class="chips">
+        <span class="chip">Git · Bitbucket · Jira</span>
+        <span class="chip"><span class="en">CI/CD (PowerShell, Windows build server)</span><span class="vi">CI/CD (PowerShell, máy build Windows)</span></span>
+        <span class="chip"><span class="en">Linux VPS · backup &amp; rollback</span><span class="vi">Linux VPS · sao lưu &amp; rollback</span></span>
+        <span class="chip">Seq logging</span><span class="chip">Android Studio · Xcode · VS Code · Rider</span>
+      </div>
+      <h3><span class="en">AI-assisted dev</span><span class="vi">Lập trình với AI</span></h3>
+      <div class="chips">
+        <span class="chip hot">Claude Code</span><span class="chip">Codex</span>
+        <span class="chip"><span class="en">Custom agent tooling: device testing, log search, code review, QC handover</span><span class="vi">Công cụ agent tự viết: test trên máy thật, tra log, review code, bàn giao QC</span></span>
+      </div>
+      <h3><span class="en">Other</span><span class="vi">Khác</span></h3>
+      <div class="chips">
+        <span class="chip"><span class="en">Business analysis (FMCG)</span><span class="vi">Phân tích nghiệp vụ (FMCG)</span></span>
+        <span class="chip"><span class="en">Technical specs &amp; test checklists</span><span class="vi">Viết đặc tả &amp; checklist kiểm thử</span></span>
+        <span class="chip">Figma · Photoshop · Adobe XD</span>
+        <span class="chip"><span class="en">Teamwork</span><span class="vi">Làm việc nhóm</span></span>
+        <span class="chip"><span class="en">Working directly with customers</span><span class="vi">Làm việc trực tiếp với khách hàng</span></span>
+        <span class="chip"><span class="en">Debugging under pressure</span><span class="vi">Xử lý lỗi dưới áp lực</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <h2><span class="en">Experience</span><span class="vi">Kinh nghiệm làm việc</span></h2>
+    <p class="sub"><span class="en">Mobile and full-stack roles since 2019.</span><span class="vi">Vị trí mobile và full-stack từ năm 2019.</span></p>
+    <div class="timeline">
+
+      <article class="job current">
+        <div class="job-head"><h3>DMSpro Company Limited</h3><span class="date">04/2023 – <span class="en">Present</span><span class="vi">nay</span></span></div>
+        <div class="pos">Full-Stack Mobile Developer</div>
+        <div class="block-title"><span class="en">2026 highlights</span><span class="vi">Điểm nổi bật 2026</span> <span class="badge"><span class="en">NEW</span><span class="vi">MỚI</span></span></div>
+        <ul class="en">
+          <li><b>DMSpro SFA</b> (Flutter) — Sales Force Automation app for FMCG sales reps and supervisors: store visits, ordering &amp; promotions, inventory, timekeeping; offline-first with SQLite data sync.</li>
+          <li><b>ShelfPRO</b> (Flutter) — retail-execution app for promoters/merchandisers: shelf and display photo audits; integrated AI image-recognition results (Azure Service Bus → webhook → FCM push) so field staff see scoring in real time.</li>
+          <li>Backend features on ASP.NET Core microservices, Azure Functions / Hangfire jobs and SQL Server data-warehouse APIs; backward-compatible API design so old and new app versions run safely side by side.</li>
+          <li>Built the team's CI/CD on a Windows build server: auto-deploy backend to QC, auto-build QC/QAS Android APKs, chat-bot notifications and a daily Jira workload report summarized by AI.</li>
+          <li>Introduced AI coding agents with in-house tooling (device testing via ADB, log search, QC database queries, code review, QC handover) — shortening bug-fix and hand-over time.</li>
+        </ul>
+        <ul class="vi">
+          <li><b>DMSpro SFA</b> (Flutter) — ứng dụng quản lý lực lượng bán hàng cho nhân viên và giám sát bán hàng ngành FMCG: viếng thăm cửa hàng, đặt hàng &amp; khuyến mãi, tồn kho, chấm công; chạy offline và đồng bộ dữ liệu SQLite.</li>
+          <li><b>ShelfPRO</b> (Flutter) — ứng dụng thực thi bán lẻ cho PG và nhân viên trưng bày: chụp ảnh, chấm kệ hàng và trưng bày; tích hợp kết quả nhận diện ảnh bằng AI (Azure Service Bus → webhook → FCM) để nhân viên thấy điểm chấm ngay.</li>
+          <li>Phát triển backend trên microservice ASP.NET Core, job Azure Functions / Hangfire và API kho dữ liệu SQL Server; thiết kế API tương thích ngược để app bản cũ và bản mới chạy song song an toàn.</li>
+          <li>Dựng CI/CD cho team trên máy build Windows: tự deploy backend lên môi trường QC, tự build APK Android QC/QAS, bot chat báo build/deploy và báo cáo khối lượng việc Jira hằng ngày do AI tóm tắt.</li>
+          <li>Đưa AI coding agent vào quy trình với bộ công cụ tự viết (test trên máy thật qua ADB, tra log, truy vấn dữ liệu QC, review code, bàn giao QC) — rút ngắn thời gian sửa lỗi và bàn giao.</li>
+        </ul>
+        <div class="block-title">2023 – 2025</div>
+        <ul class="en">
+          <li>Designed and developed apps and systems for the DMS/SFA product line, e.g. <b>Sabeco MT</b> (store visits, customer care, timekeeping, leave).</li>
+          <li>Business analysis in the FMCG domain, feature documentation, optimization and bug fixing, app store releases.</li>
+        </ul>
+        <ul class="vi">
+          <li>Thiết kế và phát triển ứng dụng, hệ thống cho dòng sản phẩm DMS/SFA, ví dụ <b>Sabeco MT</b> (viếng thăm cửa hàng, chăm sóc khách hàng, chấm công, nghỉ phép).</li>
+          <li>Phân tích nghiệp vụ ngành FMCG, viết tài liệu tính năng, tối ưu và sửa lỗi, phát hành ứng dụng lên store.</li>
+        </ul>
+        <div class="stack"><span class="chip">Flutter</span><span class="chip">ASP.NET Core</span><span class="chip">gRPC</span><span class="chip">Azure Service Bus</span><span class="chip">SQL Server</span><span class="chip">GetX</span></div>
+      </article>
+
+      <article class="job">
+        <div class="job-head"><h3>FPT International Telecom Company Limited</h3><span class="date">04/2022 – 03/2023</span></div>
+        <div class="pos">Mobile Developer</div>
+        <ul class="en">
+          <li>Developed mobile apps for the company's products (Fshare Mobile, Fstorage Mobile); optimization and bug fixing; released to Google Play and App Store.</li>
+        </ul>
+        <ul class="vi">
+          <li>Phát triển ứng dụng mobile cho sản phẩm của công ty (Fshare Mobile, Fstorage Mobile); tối ưu và sửa lỗi; phát hành lên Google Play và App Store.</li>
+        </ul>
+        <div class="stack"><span class="chip">Flutter</span><span class="chip">Dart</span><span class="chip">Java</span><span class="chip">GetX</span><span class="chip">BLoC</span></div>
+      </article>
+
+      <article class="job">
+        <div class="job-head"><h3>THL Software Company Limited <small class="en">(now THL One JSC)</small><small class="vi">(nay là CTCP THL One)</small></h3><span class="date">05/2019 – 04/2022</span></div>
+        <div class="pos">Mobile Developer</div>
+        <ul class="en">
+          <li>Developed mobile apps and web APIs for outsourcing projects and in-house products; gathered requirements directly from customers.</li>
+          <li>Proposed optimizations to cut delivery time and improve app performance; maintained and extended existing apps; app store releases.</li>
+        </ul>
+        <ul class="vi">
+          <li>Phát triển ứng dụng mobile và web API cho dự án outsource và sản phẩm của công ty; nhận yêu cầu trực tiếp từ khách hàng.</li>
+          <li>Đề xuất tối ưu để rút ngắn thời gian làm và tăng hiệu năng ứng dụng; bảo trì, phát triển thêm tính năng; phát hành lên store.</li>
+        </ul>
+        <div class="stack"><span class="chip">Java</span><span class="chip">Kotlin</span><span class="chip">Flutter</span><span class="chip">Spring Boot</span><span class="chip">MVP / MVVM</span><span class="chip">BLoC</span></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="soft" id="projects">
+  <div class="wrap">
+    <h2><span class="en">Projects</span><span class="vi">Dự án</span></h2>
+    <p class="sub"><span class="en">Featured work from 2026, followed by earlier projects.</span><span class="vi">Dự án nổi bật năm 2026 và các dự án trước đó.</span></p>
+
+    <div class="grid-3">
+      <article class="card">
+        <span class="tag"><span class="en">Personal SaaS · 2026</span><span class="vi">SaaS cá nhân · 2026</span></span>
+        <h3>Elix Yard</h3>
+        <p class="en">Multi-tenant booking &amp; management platform for sports venues. I built it solo — product, design, development and operations.</p>
+        <p class="vi">Nền tảng đặt sân và quản lý sân thể thao cho nhiều chủ sân. Tôi tự làm toàn bộ — sản phẩm, thiết kế, lập trình và vận hành.</p>
+        <ul class="en">
+          <li>Players find venues by sport, area and time, book online, look up bookings by code/QR</li>
+          <li>Owner portal: schedule grid, bulk pricing, multi-branch, amenities, VietQR payment, bill printing, subscription billing</li>
+          <li>Production on a Linux VPS with versioned releases, backups and rollback</li>
+        </ul>
+        <ul class="vi">
+          <li>Người chơi tìm sân theo môn, khu vực, khung giờ; đặt online; tra cứu phiếu bằng mã/QR</li>
+          <li>Cổng chủ sân: lưới lịch, đặt giá hàng loạt, nhiều chi nhánh, dịch vụ tiện ích, thanh toán VietQR, in bill, gói thuê bao</li>
+          <li>Chạy production trên Linux VPS, phát hành theo phiên bản, có sao lưu và quay lại bản cũ</li>
+        </ul>
+        <div class="stack"><span class="chip">Next.js</span><span class="chip">Go</span><span class="chip">PostgreSQL</span></div>
+        <a class="more" href="https://elixyard.com" target="_blank" rel="noopener"><span class="en">Visit elixyard.com →</span><span class="vi">Xem elixyard.com →</span></a>
+      </article>
+
+      <article class="card">
+        <span class="tag">DMSpro · 2026</span>
+        <h3>DMSpro SFA</h3>
+        <p class="en">Sales Force Automation app used daily by FMCG field sales teams.</p>
+        <p class="vi">Ứng dụng quản lý bán hàng được đội bán hàng FMCG dùng hằng ngày.</p>
+        <ul class="en">
+          <li>Store visits, ordering, promotions, inventory, timekeeping</li>
+          <li>Offline-first: works without network and syncs later</li>
+          <li>Backward-compatible APIs across app versions</li>
+        </ul>
+        <ul class="vi">
+          <li>Viếng thăm cửa hàng, đặt hàng, khuyến mãi, tồn kho, chấm công</li>
+          <li>Offline-first: không có mạng vẫn làm việc, đồng bộ sau</li>
+          <li>API tương thích ngược giữa các phiên bản app</li>
+        </ul>
+        <div class="stack"><span class="chip">Flutter</span><span class="chip">SQLite</span><span class="chip">ASP.NET Core</span><span class="chip">Azure Functions</span></div>
+        <a class="more" href="https://play.google.com/store/apps/details?id=vn.dmspro.oms.sfa" target="_blank" rel="noopener">Google Play →</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">DMSpro · 2026</span>
+        <h3>ShelfPRO</h3>
+        <p class="en">Retail-execution app for promoters and merchandisers in modern trade.</p>
+        <p class="vi">Ứng dụng thực thi bán lẻ cho PG và nhân viên trưng bày kênh hiện đại.</p>
+        <ul class="en">
+          <li>Shelf and display photo audits</li>
+          <li>AI image-recognition scoring pushed back to the app in real time</li>
+          <li>Service Bus → webhook → FCM pipeline</li>
+        </ul>
+        <ul class="vi">
+          <li>Chụp ảnh, chấm kệ hàng và trưng bày</li>
+          <li>Điểm chấm ảnh bằng AI gửi về app theo thời gian thực</li>
+          <li>Luồng Service Bus → webhook → FCM</li>
+        </ul>
+        <div class="stack"><span class="chip">Flutter</span><span class="chip">FCM</span><span class="chip">ASP.NET Core</span><span class="chip">Azure Service Bus</span></div>
+        <a class="more" href="https://play.google.com/store/apps/details?id=vn.dmspro.oms.shelfpro" target="_blank" rel="noopener">Google Play →</a>
+      </article>
+    </div>
+
+    <div class="other">
+      <div class="mini"><b>Sabeco MT</b><p class="en">Sales staff &amp; manager app: store visits, customer care, timekeeping, leave.</p><p class="vi">App cho nhân viên và quản lý bán hàng: viếng thăm cửa hàng, chăm sóc khách hàng, chấm công, nghỉ phép.</p><small>Flutter · ASP.NET Core · gRPC</small> · <a href="https://apps.apple.com/us/app/sabeco-mt/id6692623813" target="_blank" rel="noopener">App Store</a></div>
+      <div class="mini"><b>Fshare Mobile</b><p class="en">Online file storage for individuals.</p><p class="vi">Lưu trữ dữ liệu trực tuyến cho cá nhân.</p><small>Flutter · GetX</small> · <a href="https://apps.apple.com/vn/app/fshare-mobile/id1599408718?l=vi" target="_blank" rel="noopener">App Store</a></div>
+      <div class="mini"><b>Fstorage Mobile</b><p class="en">Online file storage for businesses.</p><p class="vi">Lưu trữ dữ liệu trực tuyến cho doanh nghiệp.</p><small>Flutter · BLoC</small></div>
+      <div class="mini"><b>DailyLog Mobile</b><p class="en">Freelance: internal app for a Korean government agency to record weather data.</p><p class="vi">Freelance: app nội bộ của một cơ quan chính phủ Hàn Quốc để ghi dữ liệu thời tiết.</p><small>Flutter · GetX</small></div>
+      <div class="mini"><b>MKPay</b><p class="en">Food ordering &amp; delivery connecting restaurant, shipper and customer.</p><p class="vi">Đặt và giao đồ ăn, kết nối nhà hàng, shipper và khách hàng.</p><small>Spring Boot microservices · RabbitMQ · JWT</small></div>
+      <div class="mini"><b>bbb.B</b><p class="en">Beacon management for anti-loss umbrellas (beacon in the handle).</p><p class="vi">Quản lý beacon gắn trong tay cầm ô để chống thất lạc.</p><small>Flutter · BLE · Swift</small></div>
+      <div class="mini"><b>Winnotel</b><p class="en">Hotel management – guests request hotel services in the app.</p><p class="vi">Quản lý khách sạn – khách gọi dịch vụ khách sạn qua app.</p><small>Kotlin · Java · XMPP</small></div>
+      <div class="mini"><b>StarWMS</b><p class="en">Warehouse management.</p><p class="vi">Quản lý kho.</p><small>Flutter · REST API</small></div>
+      <div class="mini"><b>ShinSung &amp; ISC</b><p class="en">Production-line management apps.</p><p class="vi">Ứng dụng quản lý dây chuyền sản xuất.</p><small>Java · RxJava · Flutter · BLoC</small></div>
+      <div class="mini"><b>DID</b><p class="en">Manage and update data from smart-home devices.</p><p class="vi">Quản lý và cập nhật dữ liệu thiết bị nhà thông minh.</p><small>Java · MVP · MariaDB</small></div>
+      <div class="mini"><b>Java Bicycle</b><p class="en">Bike rental system.</p><p class="vi">Hệ thống cho thuê xe đạp.</p><small>Spring Boot · JPA/Hibernate</small></div>
+      <div class="mini"><b>DassExpert-iOS</b><p class="en">Remote computer control (maintenance &amp; bug fixes).</p><p class="vi">Điều khiển máy tính từ xa (bảo trì, sửa lỗi).</p><small>Swift · RDP</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <h2 style="margin-bottom:20px"><span class="en">Education &amp; languages</span><span class="vi">Học vấn &amp; ngoại ngữ</span></h2>
+    <div class="two">
+      <div class="info-card">
+        <h3><span class="en">FPT Polytechnic College</span><span class="vi">Cao đẳng FPT Polytechnic</span></h3>
+        <p class="en">Mobile Programming · 2017 – 2020<br>Graduation grade: <b>Very Good</b></p>
+        <p class="vi">Lập trình mobile · 2017 – 2020<br>Xếp loại tốt nghiệp: <b>Giỏi</b></p>
+      </div>
+      <div class="info-card">
+        <h3><span class="en">Languages</span><span class="vi">Ngoại ngữ</span></h3>
+        <p class="en">English — reading &amp; writing (technical documents)<br>Vietnamese — native</p>
+        <p class="vi">Tiếng Anh — đọc &amp; viết (tài liệu kỹ thuật)<br>Tiếng Việt — bản ngữ</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="soft contact" id="contact">
+  <div class="wrap">
+    <h2><span class="en">Let's work together</span><span class="vi">Cùng hợp tác nhé</span></h2>
+    <p class="sub" style="margin:0"><span class="en">Based in Binh Thanh District, Ho Chi Minh City.</span><span class="vi">Sống tại quận Bình Thạnh, TP. Hồ Chí Minh.</span></p>
+    <div class="cta">
+      <a class="btn primary" href="mailto:phay.tran99@gmail.com">phay.tran99@gmail.com</a>
+      <a class="btn" href="tel:+84964087573">0964 087 573</a>
+      <a class="btn" href="https://github.com/tranvanphay" target="_blank" rel="noopener">github.com/tranvanphay</a>
+      <a class="btn" href="assets/CV-2026-EN.pdf" download><span class="en">Download CV (PDF)</span><span class="vi">Tải CV (PDF, tiếng Anh)</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>© <span id="y">2026</span> Trần Văn Phây</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var DESC = {
+      en: "Trần Văn Phây – Full-Stack Mobile Developer with 7+ years of experience in Flutter, Android and ASP.NET Core / Go backends. Builder of Elix Yard.",
+      vi: "Trần Văn Phây – Full-Stack Mobile Developer, hơn 7 năm kinh nghiệm Flutter, Android và backend ASP.NET Core / Go. Người xây dựng Elix Yard."
+    };
+
+    function setLang(lang, save) {
+      root.setAttribute("data-lang", lang);
+      root.lang = lang;
+      document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-set-lang") === lang ? "true" : "false");
+      });
+      var meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute("content", DESC[lang]);
+      if (save) { try { localStorage.setItem("lang", lang); } catch (e) {} }
+    }
+    setLang(root.getAttribute("data-lang") === "vi" ? "vi" : "en", false);
+    document.querySelectorAll("[data-set-lang]").forEach(function (b) {
+      b.addEventListener("click", function () { setLang(b.getAttribute("data-set-lang"), true); });
+    });
+
+    document.querySelector(".theme").addEventListener("click", function () {
+      var cur = root.getAttribute("data-theme");
+      var dark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var next = dark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) {}
+    });
+
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    var links = document.querySelectorAll(".links a");
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          links.forEach(function (a) { a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id); });
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      document.querySelectorAll("section[id]").forEach(function (s) { io.observe(s); });
+    }
+  })();
+</script>
+</body>
+</html>
