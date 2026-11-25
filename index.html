@@ -757,7 +757,7 @@
         }
         // Trên web: tải file về bộ nhớ rồi lưu, để trình duyệt không mở PDF thay vì tải.
         Promise.all(CV_FILES.map(function (f) {
-          return fetch(f[0]).then(function (r) { if (!r.ok) throw new Error(r.status); return r.blob(); });
+          return fetch(f[0], { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.blob(); });
         })).then(function (blobs) {
           blobs.forEach(function (blob, i) {
             setTimeout(function () {
