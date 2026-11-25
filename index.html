@@ -742,15 +742,32 @@
       ["assets/CV-2026-EN.pdf", "Tran-Van-Phay-CV-2026-EN.pdf"],
       ["assets/CV-2026-VI.pdf", "Tran-Van-Phay-CV-2026-VI.pdf"]
     ];
+    function saveAs(href, name) {
+      var a = document.createElement("a");
+      a.href = href; a.download = name; a.style.display = "none";
+      document.body.appendChild(a); a.click(); a.remove();
+    }
     document.querySelectorAll("[data-cv-both]").forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
-        CV_FILES.forEach(function (f, i) {
-          setTimeout(function () {
-            var a = document.createElement("a");
-            a.href = f[0]; a.download = f[1]; a.style.display = "none";
-            document.body.appendChild(a); a.click(); a.remove();
-          }, i * 500);
+        // Mở trang trực tiếp từ file (file://): trình duyệt không cho tải, nên mở 2 bản CV ở tab mới.
+        if (location.protocol === "file:") {
+          CV_FILES.forEach(function (f) { window.open(f[0], "_blank", "noopener"); });
+          return;
+        }
+        // Trên web: tải file về bộ nhớ rồi lưu, để trình duyệt không mở PDF thay vì tải.
+        Promise.all(CV_FILES.map(function (f) {
+          return fetch(f[0]).then(function (r) { if (!r.ok) throw new Error(r.status); return r.blob(); });
+        })).then(function (blobs) {
+          blobs.forEach(function (blob, i) {
+            setTimeout(function () {
+              var url = URL.createObjectURL(blob);
+              saveAs(url, CV_FILES[i][1]);
+              setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+            }, i * 400);
+          });
+        }).catch(function () {
+          CV_FILES.forEach(function (f, i) { setTimeout(function () { saveAs(f[0], f[1]); }, i * 500); });
         });
       });
     });
