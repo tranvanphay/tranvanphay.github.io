@@ -26,6 +26,7 @@
     document.documentElement.setAttribute("data-lang", lang);
     document.documentElement.lang = lang;
     try { var t = localStorage.getItem("theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+    try { if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("anim"); } catch (e) {}
   })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,18 +44,21 @@
     --accent-strong: #b35f2a;
     --accent-soft: #fbefe6;
     --shadow: 0 1px 2px rgba(31,35,40,.04), 0 6px 24px rgba(31,35,40,.06);
+    --ok: #2ea043; --shine: rgba(255,255,255,.75);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #14161a; --bg-soft: #1a1d22; --card: #1d2026; --ink: #e9eaec; --muted: #a2a9b3;
       --line: #2c3038; --accent: #e3925c; --accent-strong: #eea46f; --accent-soft: #3a2a20;
       --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.35);
+      --ok: #3fb950; --shine: rgba(255,255,255,.22);
     }
   }
   :root[data-theme="dark"] {
     --bg: #14161a; --bg-soft: #1a1d22; --card: #1d2026; --ink: #e9eaec; --muted: #a2a9b3;
     --line: #2c3038; --accent: #e3925c; --accent-strong: #eea46f; --accent-soft: #3a2a20;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.35);
+      --ok: #3fb950; --shine: rgba(255,255,255,.22);
   }
 
   /* language switch: mỗi đoạn có bản .en và .vi, chỉ hiện bản đúng ngôn ngữ */
@@ -63,7 +67,8 @@
 
   *, *::before, *::after { box-sizing: border-box; }
   html { scroll-behavior: smooth; scroll-padding-top: 72px; }
-  html, body { overflow-x: hidden; }
+  html { overflow-x: hidden; }
+  body { overflow-x: clip; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font-family: "Be Vietnam Pro", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -197,6 +202,173 @@
   .contact .cta { justify-content: center; margin-top: 20px; }
   footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; padding: 20px 0 28px; text-align: center; }
 
+  /* ===== hiệu ứng (chỉ chạy khi <html> có class "anim") ===== */
+  @property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+  @keyframes rise { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: none; } }
+  @keyframes spin-border { to { --ang: 360deg; } }
+  @keyframes shine { 0%, 55% { transform: translateX(-130%); } 85%, 100% { transform: translateX(130%); } }
+  @keyframes ping { 0% { transform: scale(1); opacity: .75; } 80%, 100% { transform: scale(2.8); opacity: 0; } }
+  @keyframes ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+  @keyframes ring-ok { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }
+  @keyframes rot { to { transform: rotate(360deg); } }
+  @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+  @keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(-40px, 30px) scale(1.12); } }
+  @keyframes breathe { 50% { scale: 1.15; } }
+
+  /* nhãn "Đang tìm kiếm cơ hội mới": viền chuyển màu xoay, vệt sáng lướt qua, chấm xanh toả sóng */
+  .eyebrow {
+    position: relative; overflow: hidden; text-decoration: none !important;
+    padding: 5px 14px 5px 12px; border: 1.5px solid transparent;
+    background: linear-gradient(var(--accent-soft), var(--accent-soft)) padding-box,
+                conic-gradient(from var(--ang), var(--accent), var(--ok), #f2c094, var(--accent)) border-box;
+    box-shadow: 0 4px 18px -6px color-mix(in srgb, var(--ok) 45%, transparent);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .eyebrow:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -6px color-mix(in srgb, var(--ok) 60%, transparent); }
+  .eyebrow::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-130%);
+    background: linear-gradient(105deg, transparent 35%, var(--shine) 50%, transparent 65%);
+  }
+  .eyebrow i { position: relative; background: var(--ok); }
+  .eyebrow i::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--ok); }
+  .anim .eyebrow { animation: rise .8s cubic-bezier(.2,.7,.2,1) both, spin-border 4s linear infinite; }
+  .anim .eyebrow::after { animation: shine 3.6s ease-in-out 1s infinite; }
+  .anim .eyebrow i::before { animation: ping 1.8s cubic-bezier(0,0,.2,1) infinite; }
+
+  /* hero: đốm màu trôi nhẹ, chữ hiện lần lượt, ảnh có vòng xoay và chấm "đang sẵn sàng" */
+  .hero { position: relative; overflow: hidden; }
+  .hero > .wrap { position: relative; z-index: 1; }
+  .hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; filter: blur(20px); }
+  .hero::before { width: 560px; height: 560px; right: -140px; top: -200px; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 24%, transparent), transparent 68%); }
+  .hero::after { width: 480px; height: 480px; left: -200px; bottom: -260px; background: radial-gradient(circle, color-mix(in srgb, var(--ok) 14%, transparent), transparent 68%); }
+  .anim .hero::before { animation: drift 14s ease-in-out infinite alternate; }
+  .anim .hero::after { animation: drift 18s ease-in-out infinite alternate-reverse; }
+  .anim .hero h1 { animation: rise .8s cubic-bezier(.2,.7,.2,1) .08s both; }
+  .anim .hero .role { animation: rise .8s cubic-bezier(.2,.7,.2,1) .16s both; }
+  .anim .hero .lead { animation: rise .8s cubic-bezier(.2,.7,.2,1) .24s both; }
+  .anim .hero .cta { animation: rise .8s cubic-bezier(.2,.7,.2,1) .32s both; }
+  .anim .hero .stat { animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+  .anim .hero .stat:nth-child(1) { animation-delay: .40s; }
+  .anim .hero .stat:nth-child(2) { animation-delay: .48s; }
+  .anim .hero .stat:nth-child(3) { animation-delay: .56s; }
+  .anim .hero .stat:nth-child(4) { animation-delay: .64s; }
+  .photo { position: relative; width: max-content; }
+  .photo::before {
+    content: ""; position: absolute; inset: -12px; border-radius: 50%; pointer-events: none;
+    border: 2px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .photo::after {
+    content: ""; position: absolute; right: 16px; bottom: 16px; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--ok); border: 4px solid var(--card);
+  }
+  .anim .photo { animation: rise .9s cubic-bezier(.2,.7,.2,1) .2s both, float 6s ease-in-out 1.2s infinite; }
+  .anim .photo::before { animation: rot 30s linear infinite; }
+  .anim .photo::after { animation: ring-ok 2s ease-out infinite; }
+
+  /* số liệu: số màu cam, đếm lên khi tải trang */
+  .stat { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+  .stat:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); box-shadow: var(--shadow); }
+  .stat b {
+    background: linear-gradient(135deg, var(--accent-strong), #e0a06a);
+    -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums;
+  }
+
+  /* tiêu đề mục: gạch cam chạy ra */
+  h2::after {
+    content: ""; display: block; width: 44px; height: 4px; border-radius: 4px; margin-top: 10px;
+    background: linear-gradient(90deg, var(--accent), #f2c094); transform-origin: left;
+  }
+  .contact h2::after { margin-left: auto; margin-right: auto; transform-origin: center; }
+  .anim h2.reveal::after { transform: scaleX(0); transition: transform .7s cubic-bezier(.2,.7,.2,1) calc(var(--rd, 0s) + .25s); }
+  .anim h2.reveal.in::after { transform: scaleX(1); }
+
+  /* hiện dần khi cuộn tới */
+  .anim .reveal {
+    opacity: 0; translate: 0 22px;
+    transition: opacity .7s ease var(--rd, 0s), translate .7s cubic-bezier(.2,.7,.2,1) var(--rd, 0s),
+                transform .25s ease, box-shadow .25s ease, border-color .25s ease, background-color .25s ease;
+  }
+  .anim .reveal.in { opacity: 1; translate: none; }
+
+  /* chip kỹ năng */
+  .chip { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
+  .chip:hover {
+    transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 60%, var(--line));
+    box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+
+  /* timeline: đường kẻ chạy xuống, chấm bật lên, chấm công việc hiện tại toả sóng */
+  .timeline::before { transform-origin: top; }
+  .anim .timeline::before { transform: scaleY(0); transition: transform 1.6s cubic-bezier(.2,.7,.2,1); }
+  .anim .timeline.drawn::before { transform: scaleY(1); }
+  .anim .job.reveal::before { scale: 0; transition: scale .5s cubic-bezier(.3,1.6,.5,1) calc(var(--rd, 0s) + .2s); }
+  .anim .job.reveal.in::before { scale: 1; }
+  .anim .job.current::before { animation: ring 2s ease-out infinite; }
+
+  /* thẻ dự án */
+  .card { position: relative; overflow: hidden; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+  .card::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), #f2c094, var(--ok));
+    transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .card:hover {
+    transform: translateY(-6px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: 0 18px 40px -18px color-mix(in srgb, var(--accent) 45%, transparent), var(--shadow);
+  }
+  .card:hover::before { transform: scaleX(1); }
+  .mini, .info-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+  .mini:hover, .info-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); box-shadow: var(--shadow); }
+
+  /* nút */
+  .btn { position: relative; overflow: hidden; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -12px color-mix(in srgb, var(--accent) 80%, transparent); }
+  .btn:active { transform: translateY(0); }
+  .btn.primary::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-130%);
+    background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.35) 50%, transparent 65%);
+    transition: transform .7s ease;
+  }
+  .btn.primary:hover::after { transform: translateX(130%); }
+
+  /* thanh menu: bóng khi cuộn, thanh tiến độ đọc */
+  nav.top { transition: box-shadow .3s ease; }
+  nav.top.scrolled { box-shadow: 0 6px 24px -12px rgba(0,0,0,.2); }
+  .progress {
+    position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; pointer-events: none;
+    background: linear-gradient(90deg, var(--accent), #f2c094, var(--ok)); transform: scaleX(0); transform-origin: left;
+  }
+  .links a { transition: color .2s ease, background-color .2s ease; }
+
+  /* nút lên đầu trang */
+  .to-top {
+    position: fixed; right: 20px; bottom: 20px; z-index: 20; width: 44px; height: 44px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--accent); color: #fff;
+    box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--accent) 80%, transparent);
+    opacity: 0; translate: 0 12px; pointer-events: none; transition: opacity .3s ease, translate .3s ease, background-color .2s ease;
+  }
+  .to-top.show { opacity: 1; translate: none; pointer-events: auto; }
+  .to-top:hover { background: var(--accent-strong); text-decoration: none; }
+  .to-top svg { width: 20px; height: 20px; }
+
+  /* liên hệ: quầng sáng nhẹ */
+  .contact { position: relative; overflow: hidden; }
+  .contact > .wrap { position: relative; z-index: 1; }
+  .contact::before {
+    content: ""; position: absolute; width: 620px; height: 620px; left: 50%; top: 50%; translate: -50% -50%;
+    border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 14%, transparent), transparent 65%);
+  }
+  .anim .contact::before { animation: breathe 8s ease-in-out infinite; }
+
+  /* đổi sáng/tối mượt */
+  html.theme-fade, html.theme-fade * { transition: background-color .4s ease, color .4s ease, border-color .4s ease !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+  }
+
   /* responsive */
   @media (max-width: 880px) {
     .links { display: none; }
@@ -213,6 +385,10 @@
     .two { grid-template-columns: 1fr; }
     .wrap { padding: 0 16px; }
     .btn { flex: 1 1 auto; justify-content: center; }
+    .photo::before { inset: -9px; }
+    .photo::after { right: 6px; bottom: 6px; width: 18px; height: 18px; border-width: 3px; }
+    .hero::before { width: 380px; height: 380px; right: -170px; top: -170px; }
+    .to-top { right: 16px; bottom: 16px; }
   }
 
   @media print {
@@ -220,6 +396,9 @@
     section, .hero { padding: 16px 0; }
     section.soft { background: none; border: 0; }
     .card, .info-card, .mini, .stat { box-shadow: none; break-inside: avoid; }
+    .progress, .to-top, .hero::before, .hero::after, .contact::before, .photo::before { display: none !important; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1 !important; translate: none !important; }
   }
 </style>
 </head>
@@ -243,12 +422,13 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
     </button>
   </div>
+  <div class="progress" aria-hidden="true"></div>
 </nav>
 
 <header class="hero" id="top">
   <div class="wrap">
     <div>
-      <span class="eyebrow"><i></i><span class="en">Open to new opportunities</span><span class="vi">Đang tìm kiếm cơ hội mới</span></span>
+      <a class="eyebrow" href="#contact"><i></i><span class="en">Open to new opportunities</span><span class="vi">Đang tìm kiếm cơ hội mới</span></a>
       <h1>Trần Văn Phây</h1>
       <p class="role">Full-Stack Mobile Developer</p>
       <p class="lead en">Full-stack mobile developer with over 7 years of experience building Flutter and native Android apps,
@@ -276,10 +456,10 @@
   </div>
   <div class="wrap">
     <div class="stats">
-      <div class="stat"><b>7+</b><span class="en">years of experience</span><span class="vi">năm kinh nghiệm</span></div>
-      <div class="stat"><b>15+</b><span class="en">projects delivered</span><span class="vi">dự án đã thực hiện</span></div>
-      <div class="stat"><b>3</b><span class="en">companies</span><span class="vi">công ty</span></div>
-      <div class="stat"><b>1</b><span class="en">SaaS product in production</span><span class="vi">sản phẩm SaaS đang vận hành</span></div>
+      <div class="stat"><b data-count="7" data-suffix="+">7+</b><span class="en">years of experience</span><span class="vi">năm kinh nghiệm</span></div>
+      <div class="stat"><b data-count="15" data-suffix="+">15+</b><span class="en">projects delivered</span><span class="vi">dự án đã thực hiện</span></div>
+      <div class="stat"><b data-count="3">3</b><span class="en">companies</span><span class="vi">công ty</span></div>
+      <div class="stat"><b data-count="1">1</b><span class="en">SaaS product in production</span><span class="vi">sản phẩm SaaS đang vận hành</span></div>
     </div>
   </div>
 </header>
@@ -517,6 +697,10 @@
 
 <footer>© <span id="y">2026</span> Trần Văn Phây</footer>
 
+<a class="to-top" href="#top" aria-label="Back to top" title="↑">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m0 0l-6 6m6-6l6 6"/></svg>
+</a>
+
 <script>
   (function () {
     var root = document.documentElement;
@@ -544,6 +728,8 @@
       var cur = root.getAttribute("data-theme");
       var dark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
       var next = dark ? "light" : "dark";
+      root.classList.add("theme-fade");
+      setTimeout(function () { root.classList.remove("theme-fade"); }, 450);
       root.setAttribute("data-theme", next);
       try { localStorage.setItem("theme", next); } catch (e) {}
     });
@@ -559,6 +745,56 @@
         });
       }, { rootMargin: "-45% 0px -50% 0px" });
       document.querySelectorAll("section[id]").forEach(function (s) { io.observe(s); });
+    }
+    // thanh tiến độ, bóng thanh menu, nút lên đầu trang
+    var nav = document.querySelector("nav.top"), bar = document.querySelector(".progress"),
+        toTop = document.querySelector(".to-top"), ticking = false;
+    function onScroll() {
+      ticking = false;
+      var y = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = "scaleX(" + (h > 0 ? Math.min(y / h, 1) : 0) + ")";
+      nav.classList.toggle("scrolled", y > 8);
+      toTop.classList.toggle("show", y > window.innerHeight * 0.8);
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+    }, { passive: true });
+    onScroll();
+
+    if (root.classList.contains("anim")) {
+      // số liệu đếm lên
+      var nums = document.querySelectorAll("[data-count]");
+      nums.forEach(function (el) { el.textContent = "0" + (el.getAttribute("data-suffix") || ""); });
+      setTimeout(function () {
+        nums.forEach(function (el) {
+          var to = +el.getAttribute("data-count"), suf = el.getAttribute("data-suffix") || "", t0 = Date.now();
+          (function step() {
+            var p = Math.min((Date.now() - t0) / 1400, 1), e = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(to * e) + suf;
+            if (p < 1) setTimeout(step, 30);
+          })();
+        });
+      }, 700);
+
+      // hiện dần khi cuộn tới
+      if ("IntersectionObserver" in window) {
+        var targets = document.querySelectorAll(
+          "section h2, section .sub, .chips-group > *, .timeline, .job, .grid-3 > .card, .mini, .info-card, .contact .cta");
+        targets.forEach(function (el) { if (!el.classList.contains("timeline")) el.classList.add("reveal"); });
+        var rio = new IntersectionObserver(function (entries) {
+          var i = 0;
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            var el = en.target;
+            if (el.classList.contains("timeline")) el.classList.add("drawn");
+            else { el.style.setProperty("--rd", Math.min(i, 8) * 70 + "ms"); el.classList.add("in"); i++; }
+            rio.unobserve(el);
+          });
+        }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+        targets.forEach(function (el) { rio.observe(el); });
+      } else {
+        document.querySelectorAll(".timeline").forEach(function (el) { el.classList.add("drawn"); });
+      }
     }
   })();
 </script>
