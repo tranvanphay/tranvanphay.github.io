@@ -438,9 +438,9 @@
         backend. Hiện phát triển các ứng dụng quản lý bán hàng (SFA) cho doanh nghiệp FMCG tại DMSpro, đồng thời xây dựng và vận hành
         <b>Elix Yard</b>, dự án cá nhân.</p>
       <div class="cta">
-        <a class="btn primary" href="assets/CV-2026-EN.pdf" download>
+        <a class="btn primary" href="assets/CV-2026-EN.pdf" download data-cv-both>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
-          <span class="en">Download CV</span><span class="vi">Tải CV (bản tiếng Anh)</span>
+          <span class="en">Download CV (EN + VI)</span><span class="vi">Tải CV (EN + VI)</span>
         </a>
         <a class="btn" href="mailto:phay.tran99@gmail.com">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
@@ -690,7 +690,7 @@
       <a class="btn primary" href="mailto:phay.tran99@gmail.com">phay.tran99@gmail.com</a>
       <a class="btn" href="tel:+84964087573">0964 087 573</a>
       <a class="btn" href="https://github.com/tranvanphay" target="_blank" rel="noopener">github.com/tranvanphay</a>
-      <a class="btn" href="assets/CV-2026-EN.pdf" download><span class="en">Download CV (PDF)</span><span class="vi">Tải CV (PDF, bản tiếng Anh)</span></a>
+      <a class="btn" href="assets/CV-2026-EN.pdf" download data-cv-both><span class="en">Download CV (PDF, EN + VI)</span><span class="vi">Tải CV (PDF, EN + VI)</span></a>
     </div>
   </div>
 </section>
@@ -735,6 +735,24 @@
     });
 
     document.getElementById("y").textContent = new Date().getFullYear();
+
+    // Nút tải CV: một lần bấm tải cả bản tiếng Anh và tiếng Việt
+    var CV_FILES = [
+      ["assets/CV-2026-EN.pdf", "Tran-Van-Phay-CV-2026-EN.pdf"],
+      ["assets/CV-2026-VI.pdf", "Tran-Van-Phay-CV-2026-VI.pdf"]
+    ];
+    document.querySelectorAll("[data-cv-both]").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        CV_FILES.forEach(function (f, i) {
+          setTimeout(function () {
+            var a = document.createElement("a");
+            a.href = f[0]; a.download = f[1]; a.style.display = "none";
+            document.body.appendChild(a); a.click(); a.remove();
+          }, i * 500);
+        });
+      });
+    });
 
     var links = document.querySelectorAll(".links a");
     if ("IntersectionObserver" in window) {
